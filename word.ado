@@ -20,7 +20,12 @@ prog def word_add_image
   has_handle
   if !r(has_handle) error 603 // file could not be opened
 
-  syntax using/ [, link(real 0.0) cx(real 0.0) cy(real 0.0)]
+  cap syntax using/ [, link(real 0.0) cx(real 0.0) cy(real 0.0)]
+  if _rc cap syntax anything(name=using1) [, link(real 0.0) cx(real 0.0) cy(real 0.0)]
+  if _rc error 198
+
+  is_blank `"`using'"'
+  local using = cond(r(is_blank), `"`using1'"', `"`using'"')
 
   mata_func `"_docx_image_add($word_handle, `"`using'"', `link', `cx', `cy' )"'
   word_save
@@ -39,7 +44,12 @@ prog def word_open
   has_handle
   if r(has_handle) error 681 // too many open files. a la -16521
 
-  syntax using/ [, replace]
+  cap syntax using/ [, replace]
+  if _rc cap syntax anything(name=using1) [, replace]
+  if _rc exit 198 // invalid syntax
+
+  is_blank `"`using'"'
+  local using = cond(r(is_blank), `"`using1'"', `"`using'"')
 
   scalar has_type = regexm(`"`using'"', "(\.[^.]+)$")
   if has_type {
