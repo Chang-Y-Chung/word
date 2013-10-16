@@ -39,7 +39,7 @@ prog def word_open
   has_handle
   if r(has_handle) error 681 // too many open files. a la -16521
 
-  cap syntax using/ [, replace]
+  syntax using/ [, replace]
 
   scalar has_type = regexm(`"`using'"', "(\.[^.]+)$")
   if has_type {
@@ -60,6 +60,7 @@ prog def word_open
     error 681 // too many open files. a la -16521
   }
   global word_filename `"`using'"'
+  word_save
 end
 
 prog def word_save
@@ -110,6 +111,6 @@ end
 
 prog def is_blank, rclass
   args s
-  return scalar is_blank = trim(`"`s'"') ==""
+  return scalar is_blank = trim(`"`s'"') == ""
 end
 
