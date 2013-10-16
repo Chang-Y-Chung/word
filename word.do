@@ -46,3 +46,13 @@ forval i=1/6 {
 word close
 // test.docx should have tiny 6 pictures
 
+
+// test 4
+// ------
+// the keyword using is now optional
+word open test, replace
+word add image test.png, cx(2880) // in twips
+word add image test.png, cx(2880) // ditto
+word close
+// test.docx should have two pictures whose width is 2 inches
+
