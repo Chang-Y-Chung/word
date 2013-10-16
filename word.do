@@ -27,7 +27,7 @@ word close
 // test 2
 // ------
 cap word open using test
-di "_rc=`rc'"
+di "_rc=" _rc
 // should fail, since test.docx already exists
 
 word open using test, replace
