@@ -56,3 +56,17 @@ word add image test.png, cx(2880) // ditto
 word close
 // test.docx should have two pictures whose width is 2 inches
 
+
+// test 5
+// ------
+// add text
+word open test, replace
+word add text test1, style("Title")
+word add text test 2
+word add text "test 3", style(Heading1)
+word add text `"test 4"'
+word add text ""
+word add text `"test 6"' some more
+word add text `"`"test 7"' some more"', s(Heading3)
+word close
+// test.docx should have 7 paragraphs

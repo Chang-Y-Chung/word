@@ -1,4 +1,4 @@
-*! version 0.0.1 cyc 2013-10-15
+*! version 0.0.1 cyc 2013-10-25
 
 global word_handle ""
 global word_filename ""
@@ -28,6 +28,21 @@ prog def word_add_image
   local using = cond(r(is_blank), `"`using1'"', `"`using'"')
 
   mata_func `"_docx_image_add($word_handle, `"`using'"', `link', `cx', `cy' )"'
+  word_save
+end
+
+prog def word_add_text
+  has_handle
+  if !r(has_handle) error 603 // file could not be opened
+
+  syntax [anything(name=str)] [, Style(string)]
+
+  unquote `"`str'"'
+  local str `"`r(unquoted)'"'
+  unquote `"`style'"'
+  local style `"`r(unquoted)'"'
+
+  mata_func `"_docx_paragraph_new_styledtext($word_handle, `"`str'"', `"`style'"')"'
   word_save
 end
 
@@ -101,7 +116,7 @@ prog def mata_func
   }
   else {
     di as err `"r(`rc'); `failure'"'
-    exit
+    mata: _error()
   }
 end
 
@@ -122,5 +137,16 @@ end
 prog def is_blank, rclass
   args s
   return scalar is_blank = trim(`"`s'"') == ""
+end
+
+prog def unquote, rclass
+  args s
+  scalar dquoted = regexm(`"`s'"', `"^\"(.*)\"$"')
+  if dquoted return local unquoted = regexs(1)
+  else {
+    scalar cdquoted = regexm(`"`s'"', `"^\`\"(.*)\"\'$"')
+    if cdquoted return local unquoted = regexs(1)
+    else return local unquoted = `"`s'"'
+  }
 end
 
