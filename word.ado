@@ -4,7 +4,7 @@ global word_handle ""
 global word_filename ""
 
 prog def word
-  version 13.0
+  version 13.1
   gettoken cmd 0: 0
   if ("`cmd'" == "") exit 198 // invalid syntax
   else word_`cmd' `0'
@@ -17,6 +17,12 @@ prog def word_add
 end
 
 prog def word_add_image
+  // this function is not supported on following:
+  //   Stata for Solaris (both SPARC and x86-64)
+  //   Stata for Mac running on Mac OS X 10.9 (Mavericks)
+  //   console Stata for Mac
+  // in any of the above, the function returns error code -16525
+
   has_handle
   if !r(has_handle) error 603 // file could not be opened
 
@@ -115,8 +121,9 @@ prog def mata_func
     if !r(is_blank) di as res `"`success'"'
   }
   else {
-    di as err `"r(`rc'); `failure'"'
-    mata: _error()
+    local errmsg `"r(`rc'); `failure'"'
+    di as err `"`errmsg'"'
+    mata: _error(`"`errmsg'"')
   }
 end
 

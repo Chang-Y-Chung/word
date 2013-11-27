@@ -1,5 +1,11 @@
+// certification script for word.ado
 
-// tests for word.ado
+clear
+discard
+set more off
+
+about
+query compilenumber
 
 // setup
 // -----
@@ -14,14 +20,21 @@
 
 // run this
 //   i.e. do word (in the command window of stata)
-
+!rm -f test.docx
 
 // test 1
 // ------
+cscript "open and close" adofiles word
+
 word open using test.docx
+assert $word_handle == 0
+assert $word_filename == "test.docx"
+
 word add image using test.png
 word close
 // open and see if test.docx has the image
+
+
 
 
 // test 2
